@@ -91,6 +91,11 @@ void demoCV()
 	imwrite("/var/www/html/images/test_threshold.jpg", thresholdFrame);*/
 }
 
+void colorSegmentation()
+{
+
+}
+
 void followLine(Robot &robot, const Axis &axis, double time){
 	Trajectory traject;
 	double angle = traject.computeAngle(axis);
@@ -116,8 +121,8 @@ int main(int argc, char *argv[])
 		cout << "Unable to open the device" << endl;
 		return -1;
 	}
-	/*Mat src;// = imread("/var/www/html/images/test.jpg");
-	/*if(!src.data || src.empty())
+	/*Mat src = imread("/var/www/html/images/red.png");
+	if(!src.data || src.empty())
 	{
 		cout << "Problem loading image!!!" << endl;
 		return 1;
@@ -126,13 +131,23 @@ int main(int argc, char *argv[])
 	gettimeofday(&start, NULL);
 	gettimeofday(&end, NULL);
 	Robot robot;
+
+	int cropWidth = 200; // px
+	int cropBottom = 90; // px
+	Vec3b red(25,45,246), blue(194, 105, 70), black(105, 99, 85), endColor();
+	double redThreshold = 80.0, blueThreshold = 50.0, blackThreshold = 4.0, endColorThreshold = 50.0;
 	double deltaTime = (double)TIME_DIFF(start, end)*1e6l; // s
 	while (true)
 	{
 		Mat src;
 		cap >> src;
-		//imshow("source", src);
-		Axis axis = ImageProcessing::compute(src, Vec3b(129, 73, 21), 50.0, 1e2);
+		imshow("avant", src);
+		Mat img = src(
+			Rect(cropWidth / 2, 0,
+				src.cols - cropWidth, src.rows - cropBottom));
+		//imwrite("/var/www/html/images/test.png", img);
+		//imshow("source", img);
+		Axis axis = ImageProcessing::compute(img, red, redThreshold, 1e2);
 		cout << "Center : " << axis.center <<
 			" Vector 1 : " << axis.p1 <<
 			" Vector 2 : " << axis.p2 << endl;
