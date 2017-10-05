@@ -17,24 +17,19 @@ void demoRobot()
 	while (true) {
 		cout << "Ne bouge pas" << endl;
 		robot.sendOrder(0, 0);
-		sleep(2);
-		//getchar();
+		getchar();
 		cout << "Roues gauche" << endl;
 		robot.sendOrder(0.1, 0);
-		sleep(2);
-		//getchar();
+		getchar();
 		cout << "Roues droites" << endl;
 		robot.sendOrder(0, 0.1);
-		sleep(2);
-		//getchar();
+		getchar();
 		cout << "Roues gauche à contre-sens des droites" << endl;
 		robot.sendOrder(-0.1, 0.1);
-		sleep(2);
-		//getchar();
+		getchar();
 		cout << "Roues gauche et droite à même allure" << endl;
 		robot.sendOrder(0.1, 0.1);
-		sleep(2);
-		//getchar();
+		getchar();
 	}
 }
 

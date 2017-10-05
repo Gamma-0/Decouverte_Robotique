@@ -20,9 +20,6 @@ void Robot::sendOrder(float leftMotor, float rightMotor)
     int right = (int)(rightMotor*255);
 
     ostringstream oss;
-    oss << "L" << left << "\r\n";
-    port.WriteString(oss.str().c_str());
-
-    oss << "R" << right << "\r\n";
+    oss << "L" << left << "\n" << "R" << right << "\n";
 	port.WriteString(oss.str().c_str());
 }
