@@ -2,8 +2,8 @@
 char inputBuff[BUFFER_SIZE];
 
 // Vitesse: 100/255
-unsigned char right_speed = 100;
-unsigned char left_speed = 100;
+unsigned char right_speed = 64;
+unsigned char left_speed = 64;
 // Sens
 bool right_to_front = 1;
 bool left_to_front = 1;
@@ -21,8 +21,6 @@ void setup() {
 	pinMode(10, OUTPUT);
 	// Direction moteur droit
 	pinMode(8, OUTPUT);
-
-	Serial.println("On and ready !");
 }
 
 
@@ -53,16 +51,16 @@ void loop() {
 
 	switch (whichMotor) {
 		case 'L':
-			Serial.print("Left speed: ");
+			/*Serial.print("Left speed: ");
 			Serial.print(motorSpeed);
-			Serial.println(to_front ? "To Front" : "To Forward");
+			Serial.println(to_front ? "To Front" : "To Forward");*/
 			left_speed = motorSpeed;
 			left_to_front = to_front;
 			break;
 		case 'R':
-			Serial.print("Right speed: ");
+			/*Serial.print("Right speed: ");
 			Serial.print(motorSpeed);
-			Serial.println(to_front ? "To Front" : "To Forward");
+			Serial.println(to_front ? "To Front" : "To Forward");*/
 			right_speed = motorSpeed;
 			right_to_front = to_front;
 			break;
