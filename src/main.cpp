@@ -1,9 +1,14 @@
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
+#include <sys/time.h>
 #include "Robot.h"
 #include "ImageProcessing.h"
+#include "Trajectory.h"
 #include <opencv2/opencv.hpp>
+
+#define TIME_DIFF(t1, t2) \
+	((t2.tv_sec - t1.tv_sec) * 1000000LL + (t2.tv_usec - t1.tv_usec))
 
 using namespace std;
 using namespace cv;
@@ -52,14 +57,10 @@ void demoCV()
 	imwrite("/var/www/html/images/test.jpg", frame);
 
 	Mat medianFilteredFrame(height, width, frame.type());
-	//Mat medianKernel = (Mat_<float>(3, 3) << 1./9.,1./9.,1./9., 1./9.,1./9.,1./9., 1./9.,1./9.,1./9.);
 	Mat medianKernel = makeMedianKernel(3);
 	filter2D(frame, medianFilteredFrame, frame.depth(), medianKernel);
 	imwrite("/var/www/html/images/test_median.jpg", medianFilteredFrame);
 	const Vec3b white_pixel = Vec3b(255, 255, 255);
-	/*Mat redFrame(height, width, frame.type());
-	Mat greenFrame(height, width, frame.type());
-	Mat blueFrame(height, width, frame.type());*/
 	Mat distanceFrame(height, width, frame.type());
 	Vec3b findedColor(136, 79, 24); // blue, green, red
 	double epsilon = 50.0;
@@ -68,9 +69,6 @@ void demoCV()
 		for (unsigned x = 0; x < height; ++x)
 		{
 			const Vec3b pixel = medianFilteredFrame.at<Vec3b>(x, y);
-			/*redFrame.at<Vec3b>(x, y)[0] = pixel[2];
-			greenFrame.at<Vec3b>(x, y)[1] = pixel[1];
-			blueFrame.at<Vec3b>(x, y)[2] = pixel[0];*/
 			if (sqrt(
 				pow(pixel[0] - findedColor[0], 2.0) +
 				pow(pixel[1] - findedColor[1], 2.0) +
@@ -80,9 +78,6 @@ void demoCV()
 			}
 		}
 	}
-	/*imwrite("/var/www/html/images/test_R.jpg", redFrame);
-	imwrite("/var/www/html/images/test_G.jpg", greenFrame);
-	imwrite("/var/www/html/images/test_B.jpg", blueFrame);*/
 	imwrite("/var/www/html/images/test_distance.jpg", distanceFrame);
 	Mat convolutedFrame(height, width, frame.type());
 	Mat kernel = (Mat_<char>(3, 3) << -1, -2, -1,
@@ -96,6 +91,16 @@ void demoCV()
 	imwrite("/var/www/html/images/test_threshold.jpg", thresholdFrame);*/
 }
 
+void followLine(Robot &robot, const Axis &axis, double time){
+	Trajectory traject;
+	double angle = traject.computeAngle(axis);
+	double angularSpeed = traject.computeAngularSpeed(angle, time);
+	double left, right;
+	traject.motorsSpeed(angularSpeed, left, right);
+	double m = 2*traject.d/(left+right);
+	robot.sendOrder(left*m, right*m);
+}
+
 Mat makeMedianKernel(unsigned size)
 {
 	Mat_<float> medianKernel(size, size);
@@ -105,20 +110,34 @@ Mat makeMedianKernel(unsigned size)
 
 int main(int argc, char *argv[])
 {
-	demoRobot();
-	//demoCV();
-	//ACP test_acp;
-	//test_acp.test();
-	Mat src = imread("/var/www/html/images/test.jpg");
-	if(!src.data || src.empty())
+	VideoCapture cap(0);
+
+	if (!cap.isOpened()) {
+		cout << "Unable to open the device" << endl;
+		return -1;
+	}
+	/*Mat src;// = imread("/var/www/html/images/test.jpg");
+	/*if(!src.data || src.empty())
 	{
 		cout << "Problem loading image!!!" << endl;
 		return 1;
+	}*/
+	struct timeval start, end;
+	gettimeofday(&start, NULL);
+	gettimeofday(&end, NULL);
+	Robot robot;
+	double deltaTime = (double)TIME_DIFF(start, end)*1e6l; // s
+	while (true)
+	{
+		Mat src;
+		cap >> src;
+		//imshow("source", src);
+		Axis axis = ImageProcessing::compute(src, Vec3b(129, 73, 21), 50.0, 1e2);
+		cout << "Center : " << axis.center <<
+			" Vector 1 : " << axis.p1 <<
+			" Vector 2 : " << axis.p2 << endl;
+
+		followLine(robot, axis, deltaTime);
 	}
-	imshow("source", src);
-	Axis axis = ImageProcessing::compute(src, Vec3b(129, 73, 21), 50.0, 1e2);
-	cout << "Center : " << axis.center <<
-		" Vector 1 : " << axis.p1 <<
-		" Vector 2 : " << axis.p2 << endl;
 	waitKey(0);
 }

@@ -44,9 +44,20 @@ public:
 	Point center, p1, p2;
 	explicit Axis()
 	{}
+	Axis(const Axis &a):
+		center(a.center), p1(a.p1), p2(a.p2)
+	{}
 	explicit Axis(Point &center, Point &p1, Point &p2):
 		center(center), p1(p1), p2(p2)
 	{}
+
+	double p1Length() const {
+		return norm(center - p1);
+	}
+
+	double p2Length() const {
+		return norm(center - p2);
+	}
 };
 
 #endif //_IMAGE_PROCESSING_H

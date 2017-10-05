@@ -8,6 +8,7 @@ set (SOURCES
     Robot.cpp
     serialib.cpp
 	ImageProcessing.cpp
+	Trajectory.cpp
     )
 
 add_executable (Robot ${SOURCES})

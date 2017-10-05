@@ -224,7 +224,8 @@ Axis ImageProcessing::compute(
 		drawAxis(image, axis.center, axis.p1, Scalar(0, 255, 0), 0.4);
 		drawAxis(image, axis.center, axis.p2, Scalar(255, 255, 0), 0.4);
 	}
-	mean = axisVec[0];
+	if (axisVec.size() >= 1)
+		mean = axisVec[0];
 
 	imshow("Principal components", image);
 	return mean;
