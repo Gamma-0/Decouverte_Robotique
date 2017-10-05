@@ -7,7 +7,7 @@ set (SOURCES
     main.cpp
     Robot.cpp
     serialib.cpp
-	ACP.cpp
+	ImageProcessing.cpp
     )
 
 add_executable (Robot ${SOURCES})

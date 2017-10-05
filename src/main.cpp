@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "Robot.h"
-//#include "ACP.h"
+#include "ImageProcessing.h"
 #include <opencv2/opencv.hpp>
 
 using namespace std;
@@ -109,4 +109,16 @@ int main(int argc, char *argv[])
 	//demoCV();
 	//ACP test_acp;
 	//test_acp.test();
+	Mat src = imread("/var/www/html/images/test.jpg");
+	if(!src.data || src.empty())
+	{
+		cout << "Problem loading image!!!" << endl;
+		return 1;
+	}
+	imshow("source", src);
+	Axis axis = ImageProcessing::compute(src, Vec3b(129, 73, 21), 50.0, 1e2);
+	cout << "Center : " << axis.center <<
+		" Vector 1 : " << axis.p1 <<
+		" Vector 2 : " << axis.p2 << endl;
+	waitKey(0);
 }
