@@ -99,11 +99,23 @@ void colorSegmentation()
 void followLine(Robot &robot, const Axis &axis, double time){
 	Trajectory traject;
 	double angle = traject.computeAngle(axis);
-	double angularSpeed = traject.computeAngularSpeed(angle, time);
+	/*double angularSpeed = traject.computeAngularSpeed(angle, time);
 	double left, right;
 	traject.motorsSpeed(angularSpeed, left, right);
-	double m = 2*traject.d/(left+right);
-	robot.sendOrder(left*m, right*m);
+	double m = 2*traject.d/(norm(left)+norm(right));
+	//cout << "angle: " << angle << " angular speed: " << angularSpeed << " L: " << left*m <<" R: " << right*m <<  endl;*/
+
+	if (angle < 0.25) {
+		robot.sendOrder(0.05, 0.35);
+	} else if (angle >= 0.25 && (angle < 0.45)) {
+		robot.sendOrder(0.12, 0.28);
+	} else if (angle >= 0.45 && (angle < 0.55)) {
+		robot.sendOrder(0.2, 0.2);
+	} else if (angle >= 0.55 && (angle < 0.75)) {
+		robot.sendOrder(0.28, 0.12);
+	} else {
+		robot.sendOrder(0.35, 0.05);
+	}
 }
 
 Mat makeMedianKernel(unsigned size)
@@ -127,21 +139,20 @@ int main(int argc, char *argv[])
 		cout << "Problem loading image!!!" << endl;
 		return 1;
 	}*/
-	struct timeval start, end;
-	gettimeofday(&start, NULL);
-	gettimeofday(&end, NULL);
+	struct timeval current, last;
+	gettimeofday(&last, NULL);
 	Robot robot;
 
 	int cropWidth = 200; // px
 	int cropBottom = 90; // px
-	Vec3b red(25,45,246), blue(194, 105, 70), black(105, 99, 85), endColor();
+	//Vec3b red(25,45,246), blue(194, 105, 70), black(95, 90, 79), endColor();
+	Vec3b red(25,45,246), blue(140, 81, 36), black(95, 90, 79), endColor();
 	double redThreshold = 80.0, blueThreshold = 50.0, blackThreshold = 4.0, endColorThreshold = 50.0;
-	double deltaTime = (double)TIME_DIFF(start, end)*1e6l; // s
 	while (true)
 	{
 		Mat src;
 		cap >> src;
-		imshow("avant", src);
+		//imshow("avant", src);
 		Mat img = src(
 			Rect(cropWidth / 2, 0,
 				src.cols - cropWidth, src.rows - cropBottom));
@@ -152,7 +163,11 @@ int main(int argc, char *argv[])
 			" Vector 1 : " << axis.p1 <<
 			" Vector 2 : " << axis.p2 << endl;
 
+		gettimeofday(&current, NULL);
+		double deltaTime = (double)TIME_DIFF(current, last)*1e6l; // s
+		last = current;
 		followLine(robot, axis, deltaTime);
+		waitKey(1);
 	}
 	waitKey(0);
 }

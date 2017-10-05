@@ -72,7 +72,7 @@ void ImageProcessing::test()
 		//return EXIT_FAILURE;
 		return;
 	}
-	imshow("src", src);
+	//imshow("src", src);
 	// Convert image to grayscale
 	Mat gray;
 	cvtColor(src, gray, COLOR_BGR2GRAY);
@@ -94,8 +94,7 @@ void ImageProcessing::test()
 		// Find the orientation of each shape
 		getOrientation(contours[i], src);
 	}
-	imshow("output", src);
-	waitKey(0);
+	//imshow("Output 1", src);
 }
 
 Mat ImageProcessing::makeMedianKernel(unsigned size)
@@ -121,9 +120,9 @@ void ImageProcessing::extractColorAsBlackWhite(
 	unsigned width = img.cols;
 	unsigned height = img.rows;
 	Mat gray(height, width, img.type());
-	for (unsigned y = 0; y < width; ++y)
+	for (unsigned y = 0; y < height; ++y)
 	{
-		for (unsigned x = 0; x < height; ++x)
+		for (unsigned x = 0; x < width; ++x)
 		{
 			const Vec3b pixel = img.at<Vec3b>(x, y);
 			if (sqrt(
@@ -137,6 +136,8 @@ void ImageProcessing::extractColorAsBlackWhite(
 	}
 	Mat trueGray;
 	cvtColor(gray, trueGray, COLOR_BGR2GRAY);
+	imshow("gray", gray);
+	imshow("true gray", trueGray);
 	threshold(trueGray, out, 50, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
 }
 
@@ -227,6 +228,6 @@ Axis ImageProcessing::compute(
 	if (axisVec.size() >= 1)
 		mean = axisVec[0];
 
-	imshow("Principal components", image);
+	imshow("Output 1", image);
 	return mean;
 }
