@@ -69,7 +69,7 @@ void demoCV()
 	Mat greenFrame(height, width, frame.type());
 	Mat blueFrame(height, width, frame.type());
 	Mat distanceFrame(height, width, frame.type());
-	Vec3b findedColor(2, 93, 148); // blue, green, red
+	Vec3b findedColor(0, 48, 254); // blue, green, red
 	double epsilon = 20.0;
 	for (unsigned y = 0; y < width; ++y)
 	{
