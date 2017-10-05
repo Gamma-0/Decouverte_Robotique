@@ -13,9 +13,7 @@ using namespace cv;
  */
 void demoRobot()
 {
-	cout << "BBB" << endl;
 	Robot robot;
-	cout << "CCC" << endl;
 	while (true) {
 		cout << "Ne bouge pas" << endl;
 		robot.sendOrder(0, 0);
@@ -107,7 +105,6 @@ Mat makeMedianKernel(unsigned size)
 
 int main(int argc, char *argv[])
 {
-	cout << "AAA" << endl;
 	demoRobot();
 	//demoCV();
 	//ACP test_acp;
