@@ -136,8 +136,8 @@ void ImageProcessing::extractColorAsBlackWhite(
 	}
 	Mat trueGray;
 	cvtColor(gray, trueGray, COLOR_BGR2GRAY);
-	imshow("gray", gray);
-	imshow("true gray", trueGray);
+	//imshow("gray", gray);
+	//imshow("true gray", trueGray);
 	threshold(trueGray, out, 50, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
 }
 
@@ -196,7 +196,7 @@ Axis ImageProcessing::compute(
 	cleanImage(img, image);
 	Mat bw;
 	extractColorAsBlackWhite(image, bw, color, colorThreshold);
-	imshow("black and white", bw);
+	//imshow("black and white", bw);
 
 	vector<vector<Point> > contours = getRegions(bw);
 	vector<Axis> axisVec;
@@ -228,6 +228,6 @@ Axis ImageProcessing::compute(
 	if (axisVec.size() >= 1)
 		mean = axisVec[0];
 
-	imshow("Output 1", image);
+	//imshow("Output 1", image);
 	return mean;
 }

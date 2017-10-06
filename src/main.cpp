@@ -146,8 +146,8 @@ int main(int argc, char *argv[])
 	int cropWidth = 200; // px
 	int cropBottom = 90; // px
 	//Vec3b red(25,45,246), blue(194, 105, 70), black(95, 90, 79), endColor();
-	Vec3b red(25,45,246), blue(140, 81, 36), black(95, 90, 79), endColor();
-	double redThreshold = 80.0, blueThreshold = 50.0, blackThreshold = 4.0, endColorThreshold = 50.0;
+	Vec3b red(25,45,246), blue(140, 81, 36), black(50, 50, 50), endColor();
+	double redThreshold = 80.0, blueThreshold = 50.0, blackThreshold = 80.0, endColorThreshold = 50.0;
 	while (true)
 	{
 		Mat src;
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 				src.cols - cropWidth, src.rows - cropBottom));
 		//imwrite("/var/www/html/images/test.png", img);
 		//imshow("source", img);
-		Axis axis = ImageProcessing::compute(img, red, redThreshold, 1e2);
+		Axis axis = ImageProcessing::compute(img, black, blackThreshold, 1e2);
 		cout << "Center : " << axis.center <<
 			" Vector 1 : " << axis.p1 <<
 			" Vector 2 : " << axis.p2 << endl;
